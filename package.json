@@ -1,8 +1,9 @@
 {
-  "name": "ev",
+  "name": "seven-eleven-gas-finder",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "A modern React application for locating 7-Eleven gas stations and managing fuel purchases",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

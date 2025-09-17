@@ -24,7 +24,7 @@
   margin: 0 auto;
 }
 
-.charging-indicator {
+.fueling-indicator {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -83,6 +83,10 @@
 /* Utility classes for icons */
 .text-blue-600 {
   color: var(--primary-blue);
+}
+
+.text-red-600 {
+  color: #DC2626;
 }
 
 .text-green-500 {
@@ -150,10 +154,27 @@
   max-width: 280px;
 }
 
-/* Station popup styles */
+/* Gas station popup styles */
 .station-popup {
   font-family: system-ui, -apple-system, sans-serif;
   max-width: 250px;
+}
+
+/* Fueling banner styles */
+.fueling-banner {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fueling-stats {
+  font-size: 0.875rem;
+  color: #6b7280;
 }
 
 .station-popup h3 {

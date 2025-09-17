@@ -1,28 +1,31 @@
 import { useState, useEffect, useRef } from 'react'
-import { MapPin, Navigation, Zap } from 'lucide-react'
+import { MapPin, Navigation, Fuel } from 'lucide-react'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
-interface ChargingStation {
+interface GasStation {
   id: string
   name: string
   address: string
   lat: number
   lng: number
-  available: number
-  total: number
-  cost: number
+  availablePumps: number
+  totalPumps: number
+  regularPrice: number
+  premiumPrice: number
+  dieselPrice: number
   amenities: string[]
-  status: 'available' | 'busy' | 'offline'
+  status: 'open' | 'busy' | 'closed'
+  isOpen24Hours: boolean
 }
 
 interface MapViewProps {
-  stations: ChargingStation[]
-  onStationSelect: (station: ChargingStation) => void
-  isCharging: boolean
+  stations: GasStation[]
+  onStationSelect: (station: GasStation) => void
+  isFueling: boolean
 }
 
-export default function MapView({ stations, onStationSelect, isCharging }: MapViewProps) {
+export default function MapView({ stations, onStationSelect, isFueling }: MapViewProps) {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const mapContainer = useRef<HTMLDivElement>(null)
@@ -114,7 +117,7 @@ export default function MapView({ stations, onStationSelect, isCharging }: MapVi
 
       // Add station markers
       stations.forEach(station => {
-        const markerColor = station.status === 'available' ? '#10B981' : 
+        const markerColor = station.status === 'open' ? '#10B981' : 
                            station.status === 'busy' ? '#F59E0B' : '#EF4444'
 
         const marker = new mapboxgl.Marker({
@@ -128,10 +131,11 @@ export default function MapView({ stations, onStationSelect, isCharging }: MapVi
                   <h3><strong>${station.name}</strong></h3>
                   <p>${station.address}</p>
                   <p><strong>Status:</strong> ${station.status}</p>
-                  <p><strong>Available:</strong> ${station.available}/${station.total} ports</p>
-                  <p><strong>Cost:</strong> $${station.cost}/kWh</p>
+                  <p><strong>Available:</strong> ${station.availablePumps}/${station.totalPumps} pumps</p>
+                  <p><strong>Regular:</strong> $${station.regularPrice}/gal</p>
+                  <p><strong>Premium:</strong> $${station.premiumPrice}/gal</p>
                   <button onclick="window.selectStation('${station.id}')" 
-                          style="background: #3B82F6; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin-top: 8px;">
+                          style="background: #DC2626; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin-top: 8px;">
                     View Details
                   </button>
                 </div>
@@ -169,7 +173,7 @@ export default function MapView({ stations, onStationSelect, isCharging }: MapVi
   )
 
   // Handle station card click to center map
-  const handleStationCardClick = (station: ChargingStation) => {
+  const handleStationCardClick = (station: GasStation) => {
     if (map.current) {
       map.current.flyTo({
         center: [station.lng, station.lat],
@@ -181,18 +185,18 @@ export default function MapView({ stations, onStationSelect, isCharging }: MapVi
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'available': return 'text-green-600'
+      case 'open': return 'text-green-600'
       case 'busy': return 'text-orange-500'
-      case 'offline': return 'text-red-500'
+      case 'closed': return 'text-red-500'
       default: return 'text-gray-500'
     }
   }
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'available': return 'Available'
+      case 'open': return 'Open'
       case 'busy': return 'Busy'
-      case 'offline': return 'Offline'
+      case 'closed': return 'Closed'
       default: return 'Unknown'
     }
   }
@@ -203,22 +207,22 @@ export default function MapView({ stations, onStationSelect, isCharging }: MapVi
       <div className="search-container">
         <input
           type="text"
-          placeholder="Search for charging stations..."
+          placeholder="Search for gas stations..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="search-input"
         />
       </div>
 
-      {/* Charging Status Banner */}
-      {isCharging && (
-        <div className="charging-banner">
+      {/* Fueling Status Banner */}
+      {isFueling && (
+        <div className="fueling-banner">
           <div className="flex items-center gap-2">
-            <Zap className="text-green-500" size={20} />
-            <span className="font-medium">Currently charging at Downtown Plaza</span>
+            <Fuel className="text-red-500" size={20} />
+            <span className="font-medium">Currently fueling at 7-Eleven Downtown</span>
           </div>
-          <div className="charging-stats">
-            <span className="text-sm text-gray-600">45 min remaining • 78% charged</span>
+          <div className="fueling-stats">
+            <span className="text-sm text-gray-600">Pump #3 • $45.67 total</span>
           </div>
         </div>
       )}
@@ -252,7 +256,7 @@ export default function MapView({ stations, onStationSelect, isCharging }: MapVi
 
       {/* Station List */}
       <div className="station-list">
-        <h3 className="list-title">Nearby Charging Stations</h3>
+        <h3 className="list-title">Nearby Gas Stations</h3>
         <div className="station-cards">
           {filteredStations.map((station) => (
             <div
@@ -274,11 +278,11 @@ export default function MapView({ stations, onStationSelect, isCharging }: MapVi
               
               <div className="station-info">
                 <div className="availability">
-                  <span className="font-medium">{station.available}/{station.total}</span>
-                  <span className="text-sm text-gray-600">ports available</span>
+                  <span className="font-medium">{station.availablePumps}/{station.totalPumps}</span>
+                  <span className="text-sm text-gray-600">pumps available</span>
                 </div>
                 <div className="cost">
-                  <span className="font-medium">${station.cost}/kWh</span>
+                  <span className="font-medium">${station.regularPrice}/gal</span>
                 </div>
                 <button className="directions-btn">
                   <Navigation size={16} />

@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
-import { ArrowLeft, Camera, Zap } from 'lucide-react'
+import { ArrowLeft, Camera, Fuel } from 'lucide-react'
 import Webcam from 'react-webcam'
 import jsQR from 'jsqr'
 
@@ -59,7 +59,7 @@ export default function QRScanner({ onScan, onBack }: QRScannerProps) {
 
   const handleManualEntry = () => {
     // Simulate successful scan for demo
-    onScan('EV-STATION-001-PORT-A')
+    onScan('7ELEVEN-PUMP-003-REGULAR')
   }
 
   return (
@@ -69,14 +69,14 @@ export default function QRScanner({ onScan, onBack }: QRScannerProps) {
         <button onClick={onBack} className="back-button">
           <ArrowLeft size={20} />
         </button>
-        <h2 className="scanner-title">Scan QR Code</h2>
+        <h2 className="scanner-title">Scan Pump QR Code</h2>
       </div>
 
       {/* Instructions */}
       <div className="scanner-instructions">
-        <Zap className="text-blue-600" size={32} />
-        <h3>Connect to Charger</h3>
-        <p>Point your camera at the QR code on the charging station to connect and start charging.</p>
+        <Fuel className="text-red-600" size={32} />
+        <h3>Connect to Gas Pump</h3>
+        <p>Point your camera at the QR code on the gas pump to connect and start fueling.</p>
       </div>
 
       {/* Camera View */}
@@ -134,14 +134,14 @@ export default function QRScanner({ onScan, onBack }: QRScannerProps) {
         </button>
       </div>
 
-      {/* Help Text */}
+        {/* Help Text */}
       <div className="scanner-help">
         <h4>Having trouble?</h4>
         <ul>
-          <li>Make sure the QR code is well-lit and clearly visible</li>
+          <li>Make sure the QR code on the pump is well-lit and clearly visible</li>
           <li>Hold your phone steady about 6 inches from the code</li>
           <li>Ensure camera permissions are enabled</li>
-          <li>Try entering the station code manually if scanning fails</li>
+          <li>Try entering the pump code manually if scanning fails</li>
         </ul>
       </div>
     </div>

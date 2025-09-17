@@ -1,4 +1,4 @@
-import { ArrowLeft, User, Zap, Clock, DollarSign, TrendingUp, Settings, CreditCard } from 'lucide-react'
+import { ArrowLeft, User, Fuel, Clock, DollarSign, TrendingUp, Settings, CreditCard } from 'lucide-react'
 
 interface UserProfileProps {
   onBack: () => void
@@ -10,37 +10,37 @@ export default function UserProfile({ onBack }: UserProfileProps) {
     name: 'Ben Lehrburger',
     email: 'ben.lehrburger@windsurf.com',
     memberSince: 'January 2024',
-    totalSessions: 47,
-    totalEnergy: 1250, // kWh
+    totalFillUps: 47,
+    totalGallons: 125.5, // gallons
     totalCost: 437.50,
-    carbonSaved: 890, // lbs CO2
-    favoriteStation: 'Downtown Plaza'
+    avgPricePerGallon: 3.48,
+    favoriteStation: '7-Eleven Downtown'
   }
 
-  const recentSessions = [
+  const recentFillUps = [
     {
       id: '1',
-      station: 'Downtown Plaza',
+      station: '7-Eleven Downtown',
       date: '2024-08-20',
-      duration: '45 min',
-      energy: 28.5,
-      cost: 9.98
+      fuelType: 'Regular',
+      gallons: 12.5,
+      cost: 43.13
     },
     {
       id: '2',
-      station: 'Beach Resort',
+      station: '7-Eleven Beach',
       date: '2024-08-18',
-      duration: '52 min',
-      energy: 32.1,
-      cost: 12.20
+      fuelType: 'Premium',
+      gallons: 11.8,
+      cost: 44.60
     },
     {
       id: '3',
-      station: 'Airport Terminal',
+      station: '7-Eleven Airport',
       date: '2024-08-15',
-      duration: '38 min',
-      energy: 24.8,
-      cost: 10.42
+      fuelType: 'Regular',
+      gallons: 13.2,
+      cost: 46.46
     }
   ]
 
@@ -73,11 +73,11 @@ export default function UserProfile({ onBack }: UserProfileProps) {
       <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon">
-            <Zap className="text-blue-600" size={24} />
+            <Fuel className="text-red-600" size={24} />
           </div>
           <div className="stat-info">
-            <span className="stat-value">{userData.totalSessions}</span>
-            <span className="stat-label">Charging Sessions</span>
+            <span className="stat-value">{userData.totalFillUps}</span>
+            <span className="stat-label">Fill-ups</span>
           </div>
         </div>
 
@@ -86,8 +86,8 @@ export default function UserProfile({ onBack }: UserProfileProps) {
             <TrendingUp className="text-green-600" size={24} />
           </div>
           <div className="stat-info">
-            <span className="stat-value">{userData.totalEnergy.toLocaleString()}</span>
-            <span className="stat-label">kWh Charged</span>
+            <span className="stat-value">{userData.totalGallons}</span>
+            <span className="stat-label">Gallons Purchased</span>
           </div>
         </div>
 
@@ -106,34 +106,34 @@ export default function UserProfile({ onBack }: UserProfileProps) {
             <Clock className="text-purple-600" size={24} />
           </div>
           <div className="stat-info">
-            <span className="stat-value">{userData.carbonSaved}</span>
-            <span className="stat-label">lbs CO₂ Saved</span>
+            <span className="stat-value">${userData.avgPricePerGallon}</span>
+            <span className="stat-label">Avg Price/Gal</span>
           </div>
         </div>
       </div>
 
-      {/* Recent Sessions */}
+      {/* Recent Fill-ups */}
       <div className="recent-sessions">
-        <h3 className="section-title">Recent Charging Sessions</h3>
+        <h3 className="section-title">Recent Fill-ups</h3>
         <div className="sessions-list">
-          {recentSessions.map((session) => (
-            <div key={session.id} className="session-card">
+          {recentFillUps.map((fillup) => (
+            <div key={fillup.id} className="session-card">
               <div className="session-header">
-                <h4 className="session-station">{session.station}</h4>
-                <span className="session-date">{session.date}</span>
+                <h4 className="session-station">{fillup.station}</h4>
+                <span className="session-date">{fillup.date}</span>
               </div>
               <div className="session-details">
                 <div className="session-metric">
-                  <Clock size={16} className="text-gray-500" />
-                  <span>{session.duration}</span>
+                  <Fuel size={16} className="text-red-600" />
+                  <span>{fillup.fuelType}</span>
                 </div>
                 <div className="session-metric">
-                  <Zap size={16} className="text-blue-600" />
-                  <span>{session.energy} kWh</span>
+                  <TrendingUp size={16} className="text-blue-600" />
+                  <span>{fillup.gallons} gal</span>
                 </div>
                 <div className="session-metric">
                   <DollarSign size={16} className="text-green-600" />
-                  <span>${session.cost}</span>
+                  <span>${fillup.cost}</span>
                 </div>
               </div>
             </div>
@@ -161,7 +161,7 @@ export default function UserProfile({ onBack }: UserProfileProps) {
       <div className="favorite-station">
         <h3 className="section-title">Favorite Station</h3>
         <div className="favorite-card">
-          <Zap className="text-blue-600" size={24} />
+          <Fuel className="text-red-600" size={24} />
           <div>
             <h4>{userData.favoriteStation}</h4>
             <p className="text-gray-600">Most frequently used station</p>
