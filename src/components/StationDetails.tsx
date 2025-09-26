@@ -1,20 +1,5 @@
 import { ArrowLeft, Navigation, Fuel, Clock, DollarSign, MapPin, Wifi, Car, Coffee } from 'lucide-react'
-
-interface GasStation {
-  id: string
-  name: string
-  address: string
-  lat: number
-  lng: number
-  availablePumps: number
-  totalPumps: number
-  regularPrice: number
-  premiumPrice: number
-  dieselPrice: number
-  amenities: string[]
-  status: 'open' | 'busy' | 'closed'
-  isOpen24Hours: boolean
-}
+import type { GasStation } from '../database/types'
 
 interface StationDetailsProps {
   station: GasStation

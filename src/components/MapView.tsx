@@ -2,22 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { MapPin, Navigation, Fuel } from 'lucide-react'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
-
-interface GasStation {
-  id: string
-  name: string
-  address: string
-  lat: number
-  lng: number
-  availablePumps: number
-  totalPumps: number
-  regularPrice: number
-  premiumPrice: number
-  dieselPrice: number
-  amenities: string[]
-  status: 'open' | 'busy' | 'closed'
-  isOpen24Hours: boolean
-}
+import type { GasStation } from '../database/types'
 
 interface MapViewProps {
   stations: GasStation[]

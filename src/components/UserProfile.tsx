@@ -1,48 +1,50 @@
 import { ArrowLeft, User, Fuel, Clock, DollarSign, TrendingUp, Settings, CreditCard } from 'lucide-react'
+import { useUserData, useUserTransactions } from '../hooks/useDatabase'
 
 interface UserProfileProps {
   onBack: () => void
 }
 
 export default function UserProfile({ onBack }: UserProfileProps) {
-  // User data
-  const userData = {
-    name: 'Ben Lehrburger',
-    email: 'ben.lehrburger@windsurf.com',
-    memberSince: 'January 2024',
-    totalFillUps: 47,
-    totalGallons: 125.5, // gallons
-    totalCost: 437.50,
-    avgPricePerGallon: 3.48,
-    favoriteStation: '7-Eleven Downtown'
+  const { userData, loading: userDataLoading } = useUserData()
+  const { transactions, loading: transactionsLoading } = useUserTransactions()
+  
+  const recentFillUps = transactions.slice(0, 3)
+
+  if (userDataLoading || transactionsLoading) {
+    return (
+      <div className="user-profile">
+        <div className="profile-header">
+          <button onClick={onBack} className="back-button">
+            <ArrowLeft size={20} />
+          </button>
+          <h2 className="profile-title">Profile</h2>
+        </div>
+        <div className="loading-container">
+          <div className="loading-spinner">
+            <User className="text-gray-400" size={48} />
+            <p>Loading profile...</p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
-  const recentFillUps = [
-    {
-      id: '1',
-      station: '7-Eleven Downtown',
-      date: '2024-08-20',
-      fuelType: 'Regular',
-      gallons: 12.5,
-      cost: 43.13
-    },
-    {
-      id: '2',
-      station: '7-Eleven Beach',
-      date: '2024-08-18',
-      fuelType: 'Premium',
-      gallons: 11.8,
-      cost: 44.60
-    },
-    {
-      id: '3',
-      station: '7-Eleven Airport',
-      date: '2024-08-15',
-      fuelType: 'Regular',
-      gallons: 13.2,
-      cost: 46.46
-    }
-  ]
+  if (!userData) {
+    return (
+      <div className="user-profile">
+        <div className="profile-header">
+          <button onClick={onBack} className="back-button">
+            <ArrowLeft size={20} />
+          </button>
+          <h2 className="profile-title">Profile</h2>
+        </div>
+        <div className="error-container">
+          <p>Error loading user data</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="user-profile">
