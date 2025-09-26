@@ -35,10 +35,15 @@ function saveDB() {
 export { initDB, saveDB };
 
 export async function initializeDatabase() {
-  const database = await initDB();
-  createTables(database);
-  seedData(database);
-  saveDB();
+  try {
+    const database = await initDB();
+    createTables(database);
+    seedData(database);
+    saveDB();
+  } catch (error) {
+    console.error('Failed to initialize database:', error);
+    throw error;
+  }
 }
 
 function createTables(database: any) {

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { initDB, saveDB } from './database';
-import type { DBGasStation, DBUserData, GasStation, UserTransaction, UserData } from './types';
+import type { GasStation, UserTransaction, UserData, DBGasStation } from './types';
 
 export class GasStationDAO {
   static async getAllStations(): Promise<GasStation[]> {
@@ -64,7 +64,6 @@ export class GasStationDAO {
       status: rowData[11],
       is_open_24_hours: rowData[12]
     } as DBGasStation;
-    
     
     return {
       id: row.id,
@@ -271,7 +270,7 @@ export class UserDataDAO {
       total_cost: rowData[6],
       avg_price_per_gallon: rowData[7],
       favorite_station: rowData[8]
-    } as DBUserData;
+    } as any;
     
     return {
       name: row.name,
